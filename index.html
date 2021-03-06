@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>🕵️‍♀️   Analisando dados de empregabilidade com o R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Mônica Rocabado e Renata Leal" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# 🕵️‍♀️ <br> Analisando dados de empregabilidade com o R
+## Dados da PNAD Contínua e PNAD covid-19
+### Mônica Rocabado e Renata Leal
+### Youth Voices Brasil - Open Data Day 2021
+### (updated: 2021-03-06)
+
+---
+
+
+
+
+background-image: url("Apresentacao_files/code_everyone.jpg")
+background-size: cover
+class: inverse
+
+## Agenda e expectativas
+
+---
+
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## O que vamos ver hoje
+
+* O que é a linguagem R?
+--
+
+* R 101 - conceitos rápidos
+--
+
+* Compreendendo os conceitos na prática com a PNAD Contínua
+--
+
+* Visualizando os dados
+--
+
+* Compreendo os dados e a importância do tema
+--
+
+<div id="htmlwidget-c47aabbeb9bf3ec637de" style="width:504px;height:270px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c47aabbeb9bf3ec637de">{"x":{"data":[{"orientation":"h","width":[0.9,0.9,0.9,0.9,0.9],"base":[0.252428592141511,0.184210526315789,0.139988400753951,0.0627809192402494,0.0289256198347107],"x":[0.0755400898941569,0.0702479338842975,0.0405248658837176,0.0273307235029723,0.0210961287516311],"y":[5,4,3,2,1],"text":["0.08%<br>Cor: Branca","0.07%<br>Cor: Branca","0.04%<br>Cor: Branca","0.03%<br>Cor: Branca","0.02%<br>Cor: Branca"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(68,1,84,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Branca","legendgroup":"Branca","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"h","width":[0.9,0.9,0.9,0.9,0.9],"base":[0.254458460200087,0.327968682035668,0.180513266637669,0.0901116427432217,0.0500217485863419],"x":[0.0297955632883862,0.0282006669566478,0.0147165434246774,0.00790198637088589,0.00543714658547195],"y":[4,5,3,2,1],"text":["0.03%<br>Cor: Preta","0.03%<br>Cor: Preta","0.01%<br>Cor: Preta","0.01%<br>Cor: Preta","0.01%<br>Cor: Preta"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(65,68,135,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Preta","legendgroup":"Preta","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"h","width":[0.9,0.9,0.9,0.9,0.9],"base":[0.359141655792374,0.286138900971437,0.099101058431202,0.196462229955053,0.0556038857474264],"x":[0.00144990575612586,0.000797448165869241,0.000507467014644047,0.000507467014644047,0.000289981151225173],"y":[5,4,2,3,1],"text":"0%<br>Cor: Amarela","type":"bar","marker":{"autocolorscale":false,"color":"rgba(42,120,142,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Amarela","legendgroup":"Amarela","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"h","width":[0.9,0.9,0.9,0.9,0.9],"base":[0,0,0,0,0],"x":[0.252428592141511,0.184210526315789,0.139988400753951,0.0627809192402494,0.0289256198347107],"y":[5,4,3,2,1],"text":["0.25%<br>Cor: Parda","0.18%<br>Cor: Parda","0.14%<br>Cor: Parda","0.06%<br>Cor: Parda","0.03%<br>Cor: Parda"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(34,168,132,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Parda","legendgroup":"Parda","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"h","width":[0.9,0.9,0.9,0.9,0.9],"base":[0.356169348992316,0.284254023488473,0.195229810062346,0.0980136291141076,0.0554588951718138],"x":[0.002972306800058,0.00181238219515734,0.00123241989270695,0.00108742931709439,0.000144990575612583],"y":[5,4,3,2,1],"text":"0%<br>Cor: Indígena","type":"bar","marker":{"autocolorscale":false,"color":"rgba(122,209,81,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Indígena","legendgroup":"Indígena","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"h","width":0.9,"base":0.286066405683631,"x":[7.24952878062846e-05],"y":[4],"text":"0%<br>Cor: Ignorado","type":"bar","marker":{"autocolorscale":false,"color":"rgba(253,231,37,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Ignorado","legendgroup":"Ignorado","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":47.1719939117199,"r":7.30593607305936,"b":43.5920852359209,"l":95.7077625570777},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Distribuição percentual do desalento por faixa etária","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.018029578077425,0.378621139625924],"tickmode":"array","ticktext":["0%","10%","20%","30%"],"tickvals":[0,0.1,0.2,0.3],"categoryorder":"array","categoryarray":["0%","10%","20%","30%"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Porcentagem","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,5.6],"tickmode":"array","ticktext":["60 anos ou +","14 a 17 anos","30 a 39 anos","40 a 59 anos","18 a 29 anos"],"tickvals":[1,2,3,4,5],"categoryorder":"array","categoryarray":["60 anos ou +","14 a 17 anos","30 a 39 anos","40 a 59 anos","18 a 29 anos"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Faixa etária","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.884514435695538},"annotations":[{"text":"Cor","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"5a40429c5366":{"text":{},"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"5a40429c5366","visdat":{"5a40429c5366":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## O que *não* vamos ver hoje
+
+--
+
+* Não é um curso aprofundado da linguagem R
+--
+
+* Não trataremos de conceitos estatísticos e econométricos
+--
+
+* Não é curso sobre Big Data
+
+---
+## Avisos
+
+* Dúvidas pelo link
+* Não precisa copiar nada
+* Microfone no mudo
+* Na parte mão na massa vou pedindo interação pelo chat 
+* Bom programador = suporte da comunidade
+--
+&lt;img src="Apresentacao_files/william_code_hero.png" width="2667" /&gt;
+
+
+
+---
+class: center, inverse
+background-image: url("Apresentacao_files/linguagem_r.jpg")
+background-size: cover
+
+##A linguagem R
+
+---
+
+background-size: cover
+
+## O que é a linguagem R? Qual sua importância
+--
+
+*  Lógica de programação e compreensão do mundo
+--
+
+* Linguagem de programação gratuita e open-source (funções pré-prontas)
+--
+
+* Ambiente de desenvolvimento: análise de dados, Modelos, Dashboards
+
+![](Apresentacao_files/figure-html/unnamed-chunk-3-1.gif)&lt;!-- --&gt;
+
+---
+
+## Mais exemplos do possibilidades no R
+
+&lt;img src="Apresentacao_files/dashboard_R.PNG" width="1797" /&gt;
+
+#### Fonte: https://monimazz.github.io/sp_segundoturno_2020/#brancos-nulos-e-absten%C3%A7%C3%B5es-2-turno
+---
+
+## Autonomia de pesquisa
+
+&lt;img src="Apresentacao_files/data_R_fluxo.jpg" width="2731" /&gt;
+
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+.hand[&lt;span style="font-size:30pt"&gt;A interface do R&lt;/span&gt;]
+![](https://bookdown.org/davi_moreira/txt4cs/txt4cs_files/figure-html/fig:rrstudio-1.png)&lt;!-- --&gt;
+
+
+.pull-rigth[
+![](https://miro.medium.com/max/4000/1*cuOlMPTUQ3cTY7ldb-usKw.png)&lt;!-- --&gt;
+]
+
+
+---
+
+## A interface do R: Rstudio (IDE)
+
+![](https://livro.curso-r.com/assets/img/rstudio/rstudio-editor.png)
+
+---
+class: center, middle, inverse
+
+## R 101 👨‍🏫
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## A lógica do R
+
+* Computador precisa de contexto
+
+--
+
+### E se um computador fosse fazer um sanduíche? 🍞
+
+* Declarar e informar os ingredientes
+* Operacionar as instruções do preparo
+
+--
+
+```r
+#Declarar e atribuir valor
+oi &lt;- "Olá mundo"
+
+# Instrução de imprimir valor
+print(oi)
+```
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+* R base: instruções pré-prontas
+
+
+```r
+numeros &lt;- c(100 , 50 , 20)
+print(numeros)
+```
+
+```
+## [1] 100  50  20
+```
+
+--
+
+```r
+mean(numeros)
+```
+
+```
+## [1] 56.66667
+```
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## Vamos para o projeto!
+
+## https://rstudio.cloud/project/2275373
+
+![](https://media.giphy.com/media/0DYipdNqJ5n4GYATKL/giphy.gif)&lt;!-- --&gt;
+
+
+---
+background-image: url("Apresentacao_files/ex1.jpg")
+background-size: cover
+
+## Exercício #1
+
+* Atribua a um objeto a frase "olá mundo" no R Console
+* Chame o seu objeto
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## Formatos no R
+
+* pdf
+* excel
+* csv
+* rds
+* etc
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## Tipos de dados no R
+
+- data
+- integer: números inteiros
+- numeric: números decimais
+- complex: números complexos
+- logical: FALSE, TRUE, NA
+- factor: categórica ex: (“ótimo”, “bom”, “médio”, “ruim”)
+- character: texto ex: (“eu amo bolo de chocolate”)
+
+---
+background-size: cover
+background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
+
+## Pacotes
+
+---
+
+## Pacotes ou nossa caixa de ferramentas 🛠
+
+&gt; Packages are the fundamental units of reproducible R code.
+
+- Pacotes = Caixa de ferramentas
+- Open source e a infinidade de pacotes
+- Coleção de funções, dados, documentação, etc
+
+
+```r
+# install.packages("kittyR")
+library(kittyR)
+
+kittyR::kittyR(meow = FALSE, only_kitten = TRUE)
+```
+
+![](Apresentacao_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+
+---
+background-image: url("Apresentacao_files/pnad.jpg")
+background-size: cover
+class: middle, center
+
+# Explicando na prática! Dados da PNAD 📉
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+# Dados da PNAD Contínua
+
+ - Microdados 3 trimestre de 2020
+  - UF
+  - idade
+  - cor
+  - sexo
+  
+&lt;img src="Apresentacao_files/microdados.PNG" width="891" /&gt;
+
+---
+background-image: url("Apresentacao_files/filter.jpg")
+background-size: cover
+class: middle, center, inverse
+
+## Filtrando os dados
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+# O pacote dplyr
+
+- Pacote que permite manipulação de dados
+- filtragem de linhas com condicionais
+- selecionar colunas
+- mudar valores das colunas
+- Resumir valores
+- Agrupar valores
+
+
+```r
+library(dplyr)
+```
+
+---
+&lt;img src="Apresentacao_files/filter_dplyr.jpg" width="9099" /&gt;
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+#As condicionais no R
+
+* Maior ou igual a: &gt;=
+* Igual a: ==
+* Menor ou igual a: &lt;=
+* Diferente de: !=
+
+---
+## Mutate
+
+&lt;img src="Apresentacao_files/dplyr_mutate.png" width="5975" /&gt;
+---
+## Case_when
+&lt;img src="Apresentacao_files/dplyr_case_when.png" width="11387" /&gt;
+
+---
+background-size: cover
+background-image: url("Apresentacao_files/sand.jpg")
+
+##Intervalo - 5 minutos
+
+---
+## Visualizando os dados
+&lt;img src="Apresentacao_files/ggplot_graficos.png" width="3007" /&gt;
+
+---
+background-image: url("Apresentacao_files/cake.jpg")
+background-size: cover
+
+# ggplot e camadas de bolo
+---
+
+# Entendendo os dados
+&lt;img src="Apresentacao_files/graf1.png" width="669" /&gt;
+
+---
+# Entendendo os dados
+&lt;img src="Apresentacao_files/graf2.png" width="669" /&gt;
+
+---
+# Entendendo os dados
+&lt;img src="Apresentacao_files/graf3.png" width="1240" /&gt;
+
+---
+
+#Como baixar os dados da PNAD?
+
+```r
+#subir o pacote
+library(PNADcIBGE)
+
+#determinar as variáveis
+variaveis &lt;- c("UF",
+               "V1027",
+               "V1028",
+               "V2007",
+               "V2009",
+               "V2010",
+               "V4001",
+               "V4005",
+               "V4071",
+               "V4073",
+               "V4074A",
+               "V4077")
+
+#Donwload dos dados da PNAD Contínua
+dadosPNADc_2020_3tri &lt;- get_pnadc(year = 2020, quarter = 3, 
+                                  vars = variaveis, labels = TRUE)
+
+#Colocando os dados em um objeto - atribuindo valor a um objeto
+pnad_2020_3tri &lt;- dadosPNADc_2020_3tri$variables
+```
+
+---
+
+&lt;img src="Apresentacao_files/comunidade_R.png" width="2679" /&gt;
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+# Referencias e próximos passos
+
+### Para aprender mais R
+- [R4ds](https://r4ds.had.co.nz/) 
+- Rladies
+- [Rstudio Education](https://rstudio-education.github.io/hopr/)
+- [Txt4cs](https://bookdown.org/davi_moreira/txt4cs/)
+- [Blog emo::ji(':)')](https://rdados.netlify.app/) 
+
+### Para aprender mais sobre a PNAD e usos no R
+- [Tutorial](http://rstudio-pubs-static.s3.amazonaws.com/528973_5c974ffebf02480f80b091daa4fd2514.html#47_regress%C3%A3o_para_determinar_a_renda)
+- [Informações sobre a Pnad](https://biblioteca.ibge.gov.br/visualizacao/periodicos/2421/pnact_2020_3tri.pdf)
+
+---
+background-image: url("Apresentacao_files/fundo_branco_yvb.png")
+background-size: cover
+
+## Obrigada!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
